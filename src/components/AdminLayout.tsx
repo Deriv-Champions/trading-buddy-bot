@@ -44,7 +44,12 @@ const AdminLayout = () => {
             </Link>
           ))}
         </nav>
-      </aside>
+        <div className="p-4 border-t">
+          <Button variant="ghost" onClick={handleLogout} className="w-full justify-start gap-3 text-muted-foreground hover:text-foreground">
+            <LogOut className="h-4 w-4" />
+            Logout
+          </Button>
+        </div>
 
       {/* Mobile nav */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 border-t bg-card z-50">

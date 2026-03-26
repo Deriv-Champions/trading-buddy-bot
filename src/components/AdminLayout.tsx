@@ -13,7 +13,12 @@ const navItems = [
 
 const AdminLayout = () => {
   const location = useLocation();
+  const navigate = useNavigate();
 
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    navigate("/admin/login");
+  };
   return (
     <div className="flex min-h-screen bg-background">
       {/* Sidebar */}

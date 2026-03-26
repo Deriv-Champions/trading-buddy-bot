@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { usePageMeta } from "@/hooks/use-page-meta";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -9,6 +10,7 @@ import { toast } from "sonner";
 import { Save } from "lucide-react";
 
 const AgentConfig = () => {
+  usePageMeta("Agent Config | Deriv Champions Admin", "Configure your WhatsApp AI agent name and system prompt.");
   const [agentName, setAgentName] = useState("");
   const [systemPrompt, setSystemPrompt] = useState("");
   const [configId, setConfigId] = useState<string | null>(null);

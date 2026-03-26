@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { usePageMeta } from "@/hooks/use-page-meta";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -23,6 +24,7 @@ interface Stats {
 }
 
 const Dashboard = () => {
+  usePageMeta("Dashboard | Deriv Champions Admin", "Overview of WhatsApp bot conversations, leads, and performance metrics.");
   const [stats, setStats] = useState<Stats>({
     conversations: 0, leads: 0, qualified: 0, hotLeads: 0, nurturing: 0, converted: 0,
   });

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { usePageMeta } from "@/hooks/use-page-meta";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -49,6 +50,7 @@ const statusColors: Record<string, "default" | "secondary" | "destructive" | "ou
 };
 
 const Leads = () => {
+  usePageMeta("Leads | Deriv Champions Admin", "Track and qualify leads from WhatsApp conversations with AI-powered scoring.");
   const [leads, setLeads] = useState<Lead[]>([]);
   const [filter, setFilter] = useState("all");
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);

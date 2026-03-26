@@ -24,6 +24,7 @@ interface Stats {
 }
 
 const Dashboard = () => {
+  usePageMeta("Dashboard | Deriv Champions Admin", "Overview of WhatsApp bot conversations, leads, and performance metrics.");
   const [stats, setStats] = useState<Stats>({
     conversations: 0, leads: 0, qualified: 0, hotLeads: 0, nurturing: 0, converted: 0,
   });

@@ -26,6 +26,7 @@ interface Message {
 }
 
 const Conversations = () => {
+  usePageMeta("Conversations | Deriv Champions Admin", "View and manage WhatsApp conversations with leads and prospects.");
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [selected, setSelected] = useState<string | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);

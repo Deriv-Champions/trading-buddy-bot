@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { LogIn } from "lucide-react";
 
 const Login = () => {
+  usePageMeta("Login | Deriv Champions Admin", "Sign in to manage your WhatsApp trading bot and leads.");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);

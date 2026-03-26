@@ -4,8 +4,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { formatDistanceToNow } from "date-fns";
-import { ArrowLeft, MessageSquare } from "lucide-react";
+import { formatDistanceToNow, format } from "date-fns";
+import { ArrowLeft, Download, MessageSquare } from "lucide-react";
+import jsPDF from "jspdf";
 
 interface Conversation {
   id: string;
@@ -54,6 +55,54 @@ const Conversations = () => {
 
   const selectedConv = conversations.find((c) => c.id === selected);
 
+  const exportChatPDF = () => {
+    if (!selectedConv || messages.length === 0) return;
+    const doc = new jsPDF();
+    const name = selectedConv.whatsapp_name || selectedConv.whatsapp_phone;
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const margin = 14;
+    const maxWidth = pageWidth - margin * 2;
+    let y = 20;
+
+    doc.setFontSize(16);
+    doc.setFont("helvetica", "bold");
+    doc.text(`Chat with ${name}`, margin, y);
+    y += 6;
+    doc.setFontSize(9);
+    doc.setFont("helvetica", "normal");
+    doc.text(`Phone: ${selectedConv.whatsapp_phone}`, margin, y);
+    y += 10;
+
+    doc.setDrawColor(200);
+    doc.line(margin, y, pageWidth - margin, y);
+    y += 8;
+
+    messages.forEach((msg) => {
+      const sender = msg.role === "assistant" ? "Steve (Bot)" : name;
+      const time = format(new Date(msg.created_at), "MMM d, yyyy h:mm a");
+      const header = `${sender}  •  ${time}`;
+      const lines = doc.splitTextToSize(msg.content, maxWidth - 4);
+      const blockHeight = 6 + lines.length * 5 + 4;
+
+      if (y + blockHeight > doc.internal.pageSize.getHeight() - 15) {
+        doc.addPage();
+        y = 15;
+      }
+
+      doc.setFontSize(8);
+      doc.setTextColor(120);
+      doc.text(header, margin, y);
+      y += 5;
+
+      doc.setFontSize(10);
+      doc.setTextColor(30);
+      doc.text(lines, margin + 2, y);
+      y += lines.length * 5 + 6;
+    });
+
+    doc.save(`chat-${name.replace(/\s+/g, "-")}.pdf`);
+  };
+
   // Mobile: show thread when selected, list when not
   return (
     <div>
@@ -100,20 +149,27 @@ const Conversations = () => {
 
         {/* Messages thread */}
         <Card className={`lg:col-span-2 ${!selected ? "hidden lg:block" : ""}`}>
-          <CardHeader className="pb-3 flex flex-row items-center gap-3">
-            {selected && (
-              <Button variant="ghost" size="icon" className="lg:hidden" onClick={() => setSelected(null)}>
-                <ArrowLeft className="h-5 w-5" />
+          <CardHeader className="pb-3 flex flex-row items-center justify-between">
+            <div className="flex items-center gap-3">
+              {selected && (
+                <Button variant="ghost" size="icon" className="lg:hidden" onClick={() => setSelected(null)}>
+                  <ArrowLeft className="h-5 w-5" />
+                </Button>
+              )}
+              <div>
+                <CardTitle className="text-lg">
+                  {selectedConv ? selectedConv.whatsapp_name || selectedConv.whatsapp_phone : "Select a conversation"}
+                </CardTitle>
+                {selectedConv && (
+                  <p className="text-xs text-muted-foreground">{selectedConv.whatsapp_phone}</p>
+                )}
+              </div>
+            </div>
+            {selected && messages.length > 0 && (
+              <Button variant="outline" size="sm" onClick={() => exportChatPDF()} className="gap-1.5">
+                <Download className="h-4 w-4" /> PDF
               </Button>
             )}
-            <div>
-              <CardTitle className="text-lg">
-                {selectedConv ? selectedConv.whatsapp_name || selectedConv.whatsapp_phone : "Select a conversation"}
-              </CardTitle>
-              {selectedConv && (
-                <p className="text-xs text-muted-foreground">{selectedConv.whatsapp_phone}</p>
-              )}
-            </div>
           </CardHeader>
           <ScrollArea className="h-[calc(100vh-16rem)]">
             <CardContent className="space-y-3 pt-0">

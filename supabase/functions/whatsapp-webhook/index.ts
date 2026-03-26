@@ -287,13 +287,14 @@ serve(async (req) => {
           if (leadInfo.experience_level) leadData.experience_level = leadInfo.experience_level;
           if (typeof leadInfo.lead_score === "number") leadData.lead_score = leadInfo.lead_score;
 
-          // Map qualification status to lead status
-          if (leadInfo.qualification_status === "hot_lead") leadData.status = "qualified";
-          else if (leadInfo.qualification_status === "qualified") leadData.status = "qualified";
-          else if (leadInfo.qualification_status === "nurturing") leadData.status = "contacted";
+          // Map qualification status directly to lead status
+          if (leadInfo.qualification_status && ["new","contacted","nurturing","qualified","proposal","negotiation","converted","lost"].includes(leadInfo.qualification_status)) {
+            leadData.status = leadInfo.qualification_status;
+          }
 
-          // Store notes with next action and objections
+          // Store notes with reasoning, next action, and objections
           const notes: string[] = [];
+          if (leadInfo.qualification_reason) notes.push(`AI Reasoning: ${leadInfo.qualification_reason}`);
           if (leadInfo.next_action) notes.push(`Next: ${leadInfo.next_action}`);
           if (leadInfo.objections) notes.push(`Objections: ${leadInfo.objections}`);
           if (leadInfo.key_interests?.length) notes.push(`Interests: ${leadInfo.key_interests.join(", ")}`);

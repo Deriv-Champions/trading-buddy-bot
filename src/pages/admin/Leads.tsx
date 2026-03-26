@@ -50,6 +50,7 @@ const statusColors: Record<string, "default" | "secondary" | "destructive" | "ou
 };
 
 const Leads = () => {
+  usePageMeta("Leads | Deriv Champions Admin", "Track and qualify leads from WhatsApp conversations with AI-powered scoring.");
   const [leads, setLeads] = useState<Lead[]>([]);
   const [filter, setFilter] = useState("all");
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
